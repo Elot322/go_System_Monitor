@@ -5,16 +5,19 @@ import (
 	"github.com/mackerelio/go-osstat/cpu"
 	"github.com/mackerelio/go-osstat/memory"
 	"os/user"
+	"runtime"
 	"time"
 )
 
 func GetMainInfo() {
-	//Get data current user
+	//Get data current user and system
+	system := runtime.GOOS
 	curUser, err := user.Current()
 	if err != nil {
 		fmt.Println("Current user: NO DATA!")
 	}
 	fmt.Println("┌─────────────┐┌─────────────────────────────────────────────────────┐")
+	fmt.Println("|OS:          ||", system, "                                            |")
 	fmt.Println("|Uid user:    ||", curUser.Uid, "      |")
 	fmt.Println("|Folder user: ||", curUser.HomeDir, "                                     |")
 	fmt.Println("|User name:   ||", curUser.Username, "                              |")
@@ -26,13 +29,13 @@ func GetCpuData() {
 	fmt.Println(" ")
 	before, err := cpu.Get()
 	if err != nil {
-		fmt.Println("CPU DATA NOT WORK FOR WINDOWS!")
+		fmt.Println("CPU DATA NOT WORK FOR THIS SYSTEM!")
 		return
 	}
 	time.Sleep(time.Duration(1) * time.Second)
 	after, err := cpu.Get()
 	if err != nil {
-		fmt.Println("CPU DATA NOT WORK FOR WINDOWS!")
+		fmt.Println("CPU DATA NOT WORK FOR THIS SYSTEM!")
 		return
 	}
 	total := float64(after.Total - before.Total)
