@@ -1,9 +1,7 @@
 package main
 
-import "github.com/Elot322/go_System_Monitor/functions"
+import "github.com/Elot322/go_System_Monitor/writers"
 
 func startApp() {
-	functions.GetMainInfo()
-	functions.GetRamData()
-	functions.GetCpuData()
+	writers.RenderCycleStart()
 }

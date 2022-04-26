@@ -1,7 +1,6 @@
 package functions
 
 import (
-	"fmt"
 	"github.com/mackerelio/go-osstat/cpu"
 	"github.com/mackerelio/go-osstat/memory"
 	"os/user"
@@ -9,50 +8,38 @@ import (
 	"time"
 )
 
-func GetMainInfo() {
+func GetMainInfo() (*user.User, string) {
 	//Get data current user and system
 	system := runtime.GOOS
 	curUser, err := user.Current()
 	if err != nil {
-		fmt.Println("Current user: NO DATA!")
+		GetError("ERROR USER DATA!")
 	}
-	fmt.Println("┌─────────────┐┌─────────────────────────────────────────────────────┐")
-	fmt.Println("|OS:          ||", system, "                                            |")
-	fmt.Println("|Uid user:    ||", curUser.Uid, "      |")
-	fmt.Println("|Folder user: ||", curUser.HomeDir, "                                     |")
-	fmt.Println("|User name:   ||", curUser.Username, "                              |")
-	fmt.Println("|Account name:||", curUser.Name, "                                     |")
-	fmt.Println("└─────────────┘└─────────────────────────────────────────────────────┘")
+	return curUser, system
 }
 
-func GetCpuData() {
-	fmt.Println(" ")
+func GetCpuData() (*cpu.Stats, *cpu.Stats, float64) {
+
 	before, err := cpu.Get()
 	if err != nil {
-		fmt.Println("CPU DATA NOT WORK FOR THIS SYSTEM!")
-		return
+		GetError("CPU DATA NOT WORK FOR THIS SYSTEM!")
 	}
+
 	time.Sleep(time.Duration(1) * time.Second)
-	after, err := cpu.Get()
-	if err != nil {
-		fmt.Println("CPU DATA NOT WORK FOR THIS SYSTEM!")
-		return
-	}
+
+	after, _ := cpu.Get()
 	total := float64(after.Total - before.Total)
-	fmt.Printf("Cpu user: %f %%\n", float64(after.User-before.User)/total*100)
-	fmt.Printf("Cpu system: %f %%\n", float64(after.System-before.System)/total*100)
-	fmt.Printf("Cpu idle: %f %%\n", float64(after.Idle-before.Idle)/total*100)
+
+	return before, after, total
 }
 
-func GetRamData() {
+func GetRamData() *memory.Stats {
 	ramData, err := memory.Get()
 	if err != nil {
-		fmt.Println("RAM DATA ERROR!")
+		GetError("RAM DATA ERROR")
 	}
 
-	fmt.Printf("Memory total: %d bytes\n", ramData.Total)
-	fmt.Printf("Memory used: %d bytes\n", ramData.Used)
-	fmt.Printf("Memory free: %d bytes\n", ramData.Free)
+	return ramData
 }
 
 func GetMemoryData() {
