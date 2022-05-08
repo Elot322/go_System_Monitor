@@ -1,11 +1,12 @@
 package functions
 
 import (
-	"github.com/mackerelio/go-osstat/cpu"
-	"github.com/mackerelio/go-osstat/memory"
 	"os/user"
 	"runtime"
 	"time"
+
+	"github.com/mackerelio/go-osstat/cpu"
+	"github.com/mackerelio/go-osstat/memory"
 )
 
 func GetMainInfo() (*user.User, string) {
